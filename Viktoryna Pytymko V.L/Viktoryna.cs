@@ -41,7 +41,7 @@ namespace Viktoryna_Pytymko_V.L
                 {
                     File.WriteAllLines(UsersFilePath, Users.Select(u => u.ToString()));
                     // File.WriteAllLines(questionsFilePath, questions.Select(q => q.ToString()));
-                    File.WriteAllLines(UsersFilePath, Users.Select(r => r.ToString()));
+                    File.WriteAllLines(ResultsFilePath, Users.Select(r => r.ToString()));
                 }
                 catch (Exception ex)
                 {

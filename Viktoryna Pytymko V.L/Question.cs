@@ -67,7 +67,7 @@ namespace Viktoryna_Pytymko_V.L
                 }
                 else
                 {
-                    return null; // Indicate failure in parsing options
+                    return null; 
                 }
             }
 
