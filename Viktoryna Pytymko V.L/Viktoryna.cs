@@ -194,7 +194,7 @@ namespace Viktoryna_Pytymko_V.L
 
             foreach (var option in randomQuestion.Options)
             {
-                Console.WriteLine($"{option.Key},{option.Value}");
+                Console.WriteLine($"{option.Key}");
             }
 
             Console.WriteLine("Ваші відповіді(через кому): ");

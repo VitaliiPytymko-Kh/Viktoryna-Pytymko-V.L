@@ -76,7 +76,7 @@ namespace Viktoryna_Pytymko_V.L
 
         public override string ToString()
         {
-            string optionsString = string.Join(",", Options.Select(kv => $"{kv.Key},{kv.Value}"));
+            string optionsString = string.Join(",", Options.Select(kv => $"{kv.Value},{kv.Key}"));
             return $"{Category};{Text};{optionsString}";
         }
     }
