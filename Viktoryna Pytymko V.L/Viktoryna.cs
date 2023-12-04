@@ -167,55 +167,51 @@ namespace Viktoryna_Pytymko_V.L
                     Console.WriteLine($" Розділ :{result.Category}, вірних відповідей :{result.CorrectAnswersCount} ");
                 }
             }
+        private static readonly Random random = new Random();
 
-            private void StartVictoryna()
+
+        private void StartVictoryna()
+        {
+            Console.WriteLine("\n Оберіть розділ вікторини");
+
+            List<string> uniqueCategories = Questions.Select(q => q.Category).Distinct().ToList();
+
+            for (int i = 0; i < uniqueCategories.Count; i++)
             {
-                Console.WriteLine("\n Оберіть розділ вікторини");
-
-                List<string> uniqueCategories = Questions.Select(q => q.Category).Distinct().ToList();
-
-                for (int i = 0; i < uniqueCategories.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1}.{uniqueCategories[i]}");
-                }
-                List<string> userAnswers = new List<string>();
-
-                int categoryChoice = GetChoice(1, uniqueCategories.Count);
-                string selectedCategory = uniqueCategories[categoryChoice - 1];
-
-                var selectedQuestions = Questions.Where(q => q.Category == selectedCategory).ToList();
-
-                Console.WriteLine($"\n Початок вікторини з розділу '{selectedCategory}'...");
-
-                foreach (var question in selectedQuestions)
-                {
-                    Console.WriteLine($"\n{question.Text}");
-
-                    foreach (var option in question.Options)
-                    {
-                        Console.WriteLine($"\n{option.Key},{option.Value}");
-                    }
-                }
-
-                Console.WriteLine("Ваші відповіді(через кому): ");
-                string[] userResponse = Console.ReadLine().Split(',');
-                userAnswers.AddRange(userResponse);
-
-                int correctAnswersCount = CalculaterCorrectAnswers(selectedQuestions, userAnswers);
-                Console.WriteLine($"\n Ви відповіли вірно на {correctAnswersCount} з {selectedQuestions.Count} питань");
-
-                Results.Add(new Result(currentUser.Login, Questions[categoryChoice - 1].Category, correctAnswersCount));
-                SaveData();
-
-                // Додайте цей код для виведення питань та варіантів відповідей після вводу відповідей користувача
-                Console.WriteLine("\n Питання та відповіді:");
-                foreach (var question in selectedQuestions)
-                {
-                    Console.WriteLine(question.ToString());
-                }
+                Console.WriteLine($"{i + 1}.{uniqueCategories[i]}");
             }
 
-            private int CalculaterCorrectAnswers(List<Question> selectedQuestins, List<string> userAnswers)
+            int categoryChoice = GetChoice(1, uniqueCategories.Count);
+            string selectedCategory = uniqueCategories[categoryChoice - 1];
+
+            var selectedQuestions = Questions.Where(q => q.Category == selectedCategory).ToList();
+
+            // Виберіть випадкове питання зі списку
+            var randomQuestion = selectedQuestions[random.Next(selectedQuestions.Count)];
+
+            Console.WriteLine($"\n Початок вікторини з розділу '{selectedCategory}'...");
+            Console.WriteLine($"\n{randomQuestion.Text}");
+
+            foreach (var option in randomQuestion.Options)
+            {
+                Console.WriteLine($"{option.Key},{option.Value}");
+            }
+
+            Console.WriteLine("Ваші відповіді(через кому): ");
+            string[] userResponse = Console.ReadLine().Split(',');
+            List<string> userAnswers = new List<string>(userResponse);
+
+            int correctAnswersCount = CalculaterCorrectAnswers(new List<Question> { randomQuestion }, userAnswers);
+            Console.WriteLine($"\n Ви відповіли вірно на {correctAnswersCount} з 1 питання");
+
+            Results.Add(new Result(currentUser.Login, selectedCategory, correctAnswersCount));
+            SaveData();
+        }
+
+
+      
+
+        private int CalculaterCorrectAnswers(List<Question> selectedQuestins, List<string> userAnswers)
             {
                 int correctAnswerCout = 0;
                 foreach (var quesstion in selectedQuestins)
@@ -303,12 +299,6 @@ namespace Viktoryna_Pytymko_V.L
                 return choice;
             }
 
-          //private Random random = new Random();
-          //private List<Question> displayedQuestions = new List<Question>();
-          //private Question GetNextQuestion(List<Question> availableQuestions)
-          //{
-             //Question nextQuestion = availableQuestions[random.Next(availableQuestions.Count)];
-             //return nextQuestion;
-          //}
+          
     }
 }

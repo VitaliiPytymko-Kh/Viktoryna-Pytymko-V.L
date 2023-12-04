@@ -18,11 +18,12 @@ namespace Viktoryna_Pytymko_V.L
         {
            static void Main()
            {
-               Viktoryna v = new Viktoryna();
-               v.Run();
+            // Viktoryna v = new Viktoryna();
+            Viktoryna viktoryna = new Viktoryna();
+            viktoryna.Run();
 
-           }
-  
         }
+
+    }
 }
 
