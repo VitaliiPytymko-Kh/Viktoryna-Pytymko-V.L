@@ -40,7 +40,7 @@ namespace Viktoryna_Pytymko_V.L
                 try
                 {
                     File.WriteAllLines(UsersFilePath, Users.Select(u => u.ToString()));
-                    File.WriteAllLines(QuestionsFilePath, Questions.Select(q => q.ToString()));
+                    //File.WriteAllLines(QuestionsFilePath, Questions.Select(q => q.ToString()));
                     File.WriteAllLines(ResultsFilePath, Users.Select(r => r.ToString()));
                 }
                 catch (Exception ex)
@@ -170,6 +170,44 @@ namespace Viktoryna_Pytymko_V.L
         private static readonly Random random = new Random();
 
 
+
+        //private void StartVictoryna()
+        //{
+        //    Console.WriteLine("\n Оберіть розділ вікторини");
+
+        //    List<string> uniqueCategories = Questions.Select(q => q.Category).Distinct().ToList();
+
+        //    for (int i = 0; i < uniqueCategories.Count; i++)
+        //    {
+        //        Console.WriteLine($"{i + 1}.{uniqueCategories[i]}");
+        //    }
+
+        //    int categoryChoice = GetChoice(1, uniqueCategories.Count);
+        //    string selectedCategory = uniqueCategories[categoryChoice - 1];
+
+        //    var selectedQuestions = Questions.Where(q => q.Category == selectedCategory).ToList();
+
+        //    // Виберіть випадкове питання зі списку
+        //    var randomQuestion = selectedQuestions[random.Next(selectedQuestions.Count)];
+
+        //    Console.WriteLine($"\n Початок вікторини з розділу '{selectedCategory}'...");
+        //    Console.WriteLine($"\n{randomQuestion.Text}");
+
+        //    foreach (var option in randomQuestion.Options)
+        //    {
+        //        Console.WriteLine($"{option.Key}");
+        //    }
+
+        //    Console.WriteLine("Ваші відповіді(через кому): ");
+        //    string[] userResponse = Console.ReadLine().Split(',');
+        //    List<string> userAnswers = new List<string>(userResponse);
+
+        //    int correctAnswersCount = CalculaterCorrectAnswers(new List<Question> { randomQuestion }, userAnswers);
+        //    Console.WriteLine($"\n Ви відповіли вірно на {correctAnswersCount} з 1 питання");
+
+        //    Results.Add(new Result(currentUser.Login, selectedCategory, correctAnswersCount));
+        //    SaveData();
+        //}
         private void StartVictoryna()
         {
             Console.WriteLine("\n Оберіть розділ вікторини");
@@ -192,14 +230,16 @@ namespace Viktoryna_Pytymko_V.L
             Console.WriteLine($"\n Початок вікторини з розділу '{selectedCategory}'...");
             Console.WriteLine($"\n{randomQuestion.Text}");
 
+            int optionNumber = 1;
             foreach (var option in randomQuestion.Options)
             {
-                Console.WriteLine($"{option.Key}");
+                Console.WriteLine($"{(char)('A' + optionNumber - 1)}: {option.Key}");
+                optionNumber++;
             }
 
-            Console.WriteLine("Ваші відповіді(через кому): ");
-            string[] userResponse = Console.ReadLine().Split(',');
-            List<string> userAnswers = new List<string>(userResponse);
+            Console.WriteLine("Ваш вибір (A, B, C): ");
+            string userResponse = Console.ReadLine()?.ToUpper(); // Введення користувача в верхньому регістрі
+            List<string> userAnswers = new List<string> { userResponse };
 
             int correctAnswersCount = CalculaterCorrectAnswers(new List<Question> { randomQuestion }, userAnswers);
             Console.WriteLine($"\n Ви відповіли вірно на {correctAnswersCount} з 1 питання");
@@ -209,7 +249,8 @@ namespace Viktoryna_Pytymko_V.L
         }
 
 
-      
+
+
 
         private int CalculaterCorrectAnswers(List<Question> selectedQuestins, List<string> userAnswers)
             {
