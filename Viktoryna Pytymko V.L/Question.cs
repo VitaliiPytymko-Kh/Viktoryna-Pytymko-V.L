@@ -34,7 +34,7 @@ namespace Viktoryna_Pytymko_V.L
                 string category = parts[0];
                 string text = parts[1];
 
-                Dictionary<string, bool> options = ParseOptions(parts[2]);
+                Dictionary< string, bool> options = ParseOptions(parts[2]);
 
                 if (options == null)
                 {

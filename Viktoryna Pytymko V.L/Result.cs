@@ -18,11 +18,26 @@ namespace Viktoryna_Pytymko_V.L
             Category = category;
             CorrectAnswersCount = correnAnserCount;
         }
+        //public static Result FromString(string data)
+        //{
+        //    string[] parts = data.Split(',');
+        //    return new Result(parts[0], parts[1], int.Parse(parts[2]));
+        //}
+
         public static Result FromString(string data)
         {
             string[] parts = data.Split(',');
-            return new Result(parts[0], parts[1], int.Parse(parts[2]));
+            if (parts.Length == 3 && int.TryParse(parts[2], out int correctAnswersCount))
+            {
+                return new Result(parts[0], parts[1], correctAnswersCount);
+            }
+            else
+            {
+                // Обробка помилки, можливо, повернення null або іншої логіки за вашим вибором.
+                return null;
+            }
         }
+
         public override string ToString()
         {
             return $"{UserName},{Category},{CorrectAnswersCount}";

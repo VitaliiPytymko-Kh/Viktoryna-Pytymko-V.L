@@ -17,8 +17,9 @@ namespace Viktoryna_Pytymko_V.L
          class Program
         {
            static void Main()
-           {
-            // Viktoryna v = new Viktoryna();
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+           
             Viktoryna viktoryna = new Viktoryna();
             viktoryna.Run();
 
