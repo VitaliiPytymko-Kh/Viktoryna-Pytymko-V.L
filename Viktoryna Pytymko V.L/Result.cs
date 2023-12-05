@@ -18,11 +18,7 @@ namespace Viktoryna_Pytymko_V.L
             Category = category;
             CorrectAnswersCount = correnAnserCount;
         }
-        //public static Result FromString(string data)
-        //{
-        //    string[] parts = data.Split(',');
-        //    return new Result(parts[0], parts[1], int.Parse(parts[2]));
-        //}
+        
 
         public static Result FromString(string data)
         {
@@ -33,7 +29,6 @@ namespace Viktoryna_Pytymko_V.L
             }
             else
             {
-                // Обробка помилки, можливо, повернення null або іншої логіки за вашим вибором.
                 return null;
             }
         }

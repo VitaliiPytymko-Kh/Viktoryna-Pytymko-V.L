@@ -56,23 +56,18 @@ namespace Viktoryna_Pytymko_V.L
             Dictionary<string, bool> options = new Dictionary<string, bool>();
             string[] optionParts = optionsPart.Split(',');
 
-            for (int i = 0; i < optionParts.Length; i += 2)
+            for (int i = 0; i < optionParts.Length; i += 3)
             {
-                string optionText = optionParts[i];
-                string optionValue = optionParts[i + 1].TrimEnd(';');
+                string optionIndex = optionParts[i];
+                string optionText = optionParts[i + 1];
+                string optionValue = optionParts[i + 2].TrimEnd(';');
 
-                if (bool.TryParse(optionValue, out bool result))
-                {
-                    options.Add(optionText, result);
-                }
-                else
-                {
-                    return null; 
-                }
+                options.Add(optionIndex + ": " + optionText, bool.Parse(optionValue));
             }
 
             return options;
         }
+
 
         public override string ToString()
         {

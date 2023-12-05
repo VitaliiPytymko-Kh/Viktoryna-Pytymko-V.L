@@ -171,43 +171,7 @@ namespace Viktoryna_Pytymko_V.L
 
 
 
-        //private void StartVictoryna()
-        //{
-        //    Console.WriteLine("\n Оберіть розділ вікторини");
-
-        //    List<string> uniqueCategories = Questions.Select(q => q.Category).Distinct().ToList();
-
-        //    for (int i = 0; i < uniqueCategories.Count; i++)
-        //    {
-        //        Console.WriteLine($"{i + 1}.{uniqueCategories[i]}");
-        //    }
-
-        //    int categoryChoice = GetChoice(1, uniqueCategories.Count);
-        //    string selectedCategory = uniqueCategories[categoryChoice - 1];
-
-        //    var selectedQuestions = Questions.Where(q => q.Category == selectedCategory).ToList();
-
-        //    // Виберіть випадкове питання зі списку
-        //    var randomQuestion = selectedQuestions[random.Next(selectedQuestions.Count)];
-
-        //    Console.WriteLine($"\n Початок вікторини з розділу '{selectedCategory}'...");
-        //    Console.WriteLine($"\n{randomQuestion.Text}");
-
-        //    foreach (var option in randomQuestion.Options)
-        //    {
-        //        Console.WriteLine($"{option.Key}");
-        //    }
-
-        //    Console.WriteLine("Ваші відповіді(через кому): ");
-        //    string[] userResponse = Console.ReadLine().Split(',');
-        //    List<string> userAnswers = new List<string>(userResponse);
-
-        //    int correctAnswersCount = CalculaterCorrectAnswers(new List<Question> { randomQuestion }, userAnswers);
-        //    Console.WriteLine($"\n Ви відповіли вірно на {correctAnswersCount} з 1 питання");
-
-        //    Results.Add(new Result(currentUser.Login, selectedCategory, correctAnswersCount));
-        //    SaveData();
-        //}
+      
         private void StartVictoryna()
         {
             Console.WriteLine("\n Оберіть розділ вікторини");
@@ -230,43 +194,45 @@ namespace Viktoryna_Pytymko_V.L
             Console.WriteLine($"\n Початок вікторини з розділу '{selectedCategory}'...");
             Console.WriteLine($"\n{randomQuestion.Text}");
 
-            int optionNumber = 1;
-            foreach (var option in randomQuestion.Options)
-            {
-                Console.WriteLine($"{(char)('A' + optionNumber - 1)}: {option.Key}");
-                optionNumber++;
+
+            // int optionNumber = 1;
+            foreach(var option in randomQuestion.Options)
+{
+                Console.WriteLine($"{option.Key}");
             }
 
             Console.WriteLine("Ваш вибір (A, B, C): ");
             string userResponse = Console.ReadLine()?.ToUpper(); // Введення користувача в верхньому регістрі
             List<string> userAnswers = new List<string> { userResponse };
 
-            int correctAnswersCount = CalculaterCorrectAnswers(new List<Question> { randomQuestion }, userAnswers);
+            int correctAnswersCount = CalculaterCorrectAnswers(randomQuestion, userAnswers);
             Console.WriteLine($"\n Ви відповіли вірно на {correctAnswersCount} з 1 питання");
+        }
 
-            Results.Add(new Result(currentUser.Login, selectedCategory, correctAnswersCount));
-            SaveData();
+        private int CalculaterCorrectAnswers(Question question, List<string> userAnswers)
+        {
+            int correctAnswerCount = 0;
+
+            var correctAnswers = question.Options.Where(option => option.Value == true).Select(option => option.Key.Split(':')[0].Trim());
+
+            foreach (var userAnswer in userAnswers)
+            {
+                if (correctAnswers.Any(a => string.Equals(a, userAnswer.Trim(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    correctAnswerCount++;
+                    break;
+                }
+            }
+
+            return correctAnswerCount;
         }
 
 
 
 
 
-        private int CalculaterCorrectAnswers(List<Question> selectedQuestins, List<string> userAnswers)
-            {
-                int correctAnswerCout = 0;
-                foreach (var quesstion in selectedQuestins)
-                {
-                    var correctAnswers = quesstion.Options.Where(option => option.Value == true).Select(option => option.Key);
-                    if (userAnswers.Intersect(correctAnswers).Count() == correctAnswers.Count())
-                    {
-                        correctAnswerCout++;
-                    }
-                }
-                return correctAnswerCout;
-            }
 
-            private void Register()
+        private void Register()
             {
                 Console.WriteLine("Введіть логін: ");
                 string login = Console.ReadLine();
