@@ -23,7 +23,7 @@ namespace Viktoryna_Pytymko_V.L
             {
             DataLoader.LoadData();
 
-            //  обробник події для збереження даних при закритті програми
+           
             AppDomain.CurrentDomain.ProcessExit += (sender, args) => SaveData();
             }
 
@@ -40,7 +40,6 @@ namespace Viktoryna_Pytymko_V.L
                 try
                 {
                     File.WriteAllLines(UsersFilePath, Users.Select(u => u.ToString()));
-                    //File.WriteAllLines(QuestionsFilePath, Questions.Select(q => q.ToString()));
                     File.WriteAllLines(ResultsFilePath, Users.Select(r => r.ToString()));
                 }
                 catch (Exception ex)
@@ -188,21 +187,21 @@ namespace Viktoryna_Pytymko_V.L
 
             var selectedQuestions = Questions.Where(q => q.Category == selectedCategory).ToList();
 
-            // Виберіть випадкове питання зі списку
+            
             var randomQuestion = selectedQuestions[random.Next(selectedQuestions.Count)];
 
             Console.WriteLine($"\n Початок вікторини з розділу '{selectedCategory}'...");
             Console.WriteLine($"\n{randomQuestion.Text}");
 
 
-            // int optionNumber = 1;
+           
             foreach(var option in randomQuestion.Options)
 {
                 Console.WriteLine($"{option.Key}");
             }
 
             Console.WriteLine("Ваш вибір (A, B, C): ");
-            string userResponse = Console.ReadLine()?.ToUpper(); // Введення користувача в верхньому регістрі
+            string userResponse = Console.ReadLine()?.ToUpper(); 
             List<string> userAnswers = new List<string> { userResponse };
 
             int correctAnswersCount = CalculaterCorrectAnswers(randomQuestion, userAnswers);
@@ -226,11 +225,6 @@ namespace Viktoryna_Pytymko_V.L
 
             return correctAnswerCount;
         }
-
-
-
-
-
 
         private void Register()
             {
@@ -291,7 +285,7 @@ namespace Viktoryna_Pytymko_V.L
                     {
                         if (choice >= minValue && choice <= maxValue)
                         {
-                            break; // Введено коректне число, виходимо з циклу
+                            break; 
                         }
                         else
                         {
