@@ -40,7 +40,7 @@ namespace Viktoryna_Pytymko_V.L
                 try
                 {
                     File.WriteAllLines(UsersFilePath, Users.Select(u => u.ToString()));
-                    File.WriteAllLines(ResultsFilePath, Users.Select(r => r.ToString()));
+                    File.WriteAllLines(ResultsFilePath, Results.Select(r => r.ToString()));
                 }
                 catch (Exception ex)
                 {
@@ -112,12 +112,12 @@ namespace Viktoryna_Pytymko_V.L
                     switch (choise)
                     {
                         case 1:
-
-                            StartVictoryna();
+                        Console.Clear();
+                        StartVictoryna();
                             break;
                         case 2:
-
-                            VievResults();
+                        Console.Clear();
+                        VievResults();
                             break;
                         case 3:
                             Console.Clear();
@@ -136,46 +136,62 @@ namespace Viktoryna_Pytymko_V.L
                 }
             }
 
-            private void VievTop20()
-            {
+        private void VievTop20()
+        {
 
-                Console.WriteLine("\n Оберіть розділ вікторини:");
-                for (int i = 0; i < Questions.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1}.{Questions[i].Category}");
-                }
-                int categoryChoise = GetChoice(1, Questions.Count);
-                var topResults = Results.Where(r => r.Category == Questions[categoryChoise - 1].Category)
-                    .OrderByDescending(r => r.CorrectAnswersCount)
-                    .Take(20);
-                Console.WriteLine($"\nТоп-20 гравців у розділі '{Questions[categoryChoise - 1].Category}':");
-                int position = 1;
-                foreach (var result in topResults)
-                {
-                    Console.WriteLine($"{position}.{result.UserName},Вірних відповідей: {result.CorrectAnswersCount} ");
-                    position++;
-                }
+            Console.WriteLine("\n Оберіть розділ вікторини:");
+
+            List<string> uniqueCategories = Questions.Select(q => q.Category).Distinct().ToList();
+
+            for (int i = 0; i < uniqueCategories.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}.{uniqueCategories[i]}");
             }
 
-            private void VievResults()
+            int categoryChoise = GetChoice(1, Questions.Count);
+            var topResults = Results.Where(r => r.Category == Questions[categoryChoise - 1].Category)
+                .OrderByDescending(r => r.CorrectAnswersCount)
+                .Take(20);
+            Console.WriteLine($"\nТоп-20 гравців у розділі '{Questions[categoryChoise - 1].Category}':");
+            int position = 1;
+            foreach (var result in topResults)
             {
-                Console.WriteLine("\nРезультати вікторини");
-                var userResults = Results.Where(r => r.UserName == currentUser.Login);
-                foreach (var result in userResults)
-                {
-                    Console.WriteLine($" Розділ :{result.Category}, вірних відповідей :{result.CorrectAnswersCount} ");
-                }
+                Console.WriteLine($"{position}.{result.UserName},Вірних відповідей: {result.CorrectAnswersCount} ");
+                position++;
+
+                result.CorrectAnswersCount++;
+
             }
+        }
+
+
+        private void VievResults()
+        {
+            Console.WriteLine("\nРезультати вікторини");
+
+            var userResults = Results.Where(r => r.UserName == currentUser.Login);
+
+            foreach (var uniqueCategory in userResults.Select(r => r.Category).Distinct())
+            {
+                var resultsInCategory = userResults.Where(r => r.Category == uniqueCategory);
+
+                int totalQuestionsInCategory = resultsInCategory.First().TotalQuestions;
+                int correctAnswersCountInCategory = resultsInCategory.Sum(r => r.CorrectAnswersCount);
+
+                Console.WriteLine($" Розділ :{uniqueCategory}, вірних відповідей : {correctAnswersCountInCategory} з {totalQuestionsInCategory}");
+            }
+        }
+
         private static readonly Random random = new Random();
 
 
 
-      
         private void StartVictoryna()
         {
             Console.WriteLine("\n Оберіть розділ вікторини");
 
             List<string> uniqueCategories = Questions.Select(q => q.Category).Distinct().ToList();
+            int totalQuestions = Questions.Count;
 
             for (int i = 0; i < uniqueCategories.Count; i++)
             {
@@ -187,26 +203,51 @@ namespace Viktoryna_Pytymko_V.L
 
             var selectedQuestions = Questions.Where(q => q.Category == selectedCategory).ToList();
 
-            
-            var randomQuestion = selectedQuestions[random.Next(selectedQuestions.Count)];
-
-            Console.WriteLine($"\n Початок вікторини з розділу '{selectedCategory}'...");
-            Console.WriteLine($"\n{randomQuestion.Text}");
-
+            do { 
+                  var randomQuestion = selectedQuestions[random.Next(selectedQuestions.Count)];
+                 
+                  Console.WriteLine($"\n Початок вікторини з розділу '{selectedCategory}'...");
+                  Console.WriteLine($"\n{randomQuestion.Text}");
+                 
+                 
+                 
+                  foreach (var option in randomQuestion.Options)
+                  {
+                      Console.WriteLine($"{option.Key}");
+                  }
+                 
+                  Console.WriteLine("Ваш вибір (A, B, C): ");
+                  string userResponse = Console.ReadLine()?.ToUpper();
+                  List<string> userAnswers = new List<string> { userResponse };
+                 
+                  int correctAnswersCount = CalculaterCorrectAnswers(randomQuestion, userAnswers);
+                   Console.WriteLine($"\n Ви відповіли вірно на {correctAnswersCount} з 1 питання");
+                 
+                      Console.WriteLine("\n1. Наступне питання");
+                      Console.WriteLine("2. Вийти до Головного Меню");
+                 
+                      int menuChoice = GetChoice(1, 2);
+                 
+                      switch(menuChoice)
+                      {
+                          case 1:
+                              // Продовжити виконання циклу для наступного питання
+                              break;
+                         
+                          case 2:
+                              // Вийти до Головного Меню
+                              Console.Clear(); // Очистити консоль перед виведенням нового меню
+                              MainMenu();
+                              return;
+                      }
+                Results.Add(new Result(currentUser.Login, selectedCategory, correctAnswersCount, totalQuestions));
+                SaveData();
+            } while (true) ;
 
            
-            foreach(var option in randomQuestion.Options)
-{
-                Console.WriteLine($"{option.Key}");
-            }
 
-            Console.WriteLine("Ваш вибір (A, B, C): ");
-            string userResponse = Console.ReadLine()?.ToUpper(); 
-            List<string> userAnswers = new List<string> { userResponse };
-
-            int correctAnswersCount = CalculaterCorrectAnswers(randomQuestion, userAnswers);
-            Console.WriteLine($"\n Ви відповіли вірно на {correctAnswersCount} з 1 питання");
         }
+        
 
         private int CalculaterCorrectAnswers(Question question, List<string> userAnswers)
         {

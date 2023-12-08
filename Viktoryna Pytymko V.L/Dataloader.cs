@@ -26,13 +26,13 @@ namespace ConsoleApp7
                     Console.WriteLine($"Файл {Viktoryna.UsersFilePath} не знайдено. Створіть файл або зареєструйте нового користувача.");
                 }
 
-                //if (File.Exists(Viktoryna.QuestionsFilePath))
-                //{
-                //    Viktoryna.Questions = File.ReadAllLines(Viktoryna.QuestionsFilePath)
-                //        .Select(line => Question.FromString(line))
-                //        .Where(question => question != null)
-                //        .ToList();
-                //}
+                if (File.Exists(Viktoryna.QuestionsFilePath))
+                {
+                    Viktoryna.Questions = File.ReadAllLines(Viktoryna.QuestionsFilePath)
+                        .Select(line => Question.FromString(line))
+                        .Where(question => question != null)
+                        .ToList();
+                }
                 if (File.Exists(Viktoryna.QuestionsFilePath))
                 {
                     Viktoryna.Questions = File.ReadAllLines(Viktoryna.QuestionsFilePath, Encoding.UTF8)
